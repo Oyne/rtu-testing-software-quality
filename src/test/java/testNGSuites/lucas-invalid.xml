@@ -1,0 +1,13 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="LucasSuite">
+    <test name="LucasInvalidTests">
+        <groups>
+            <run>
+                <include name="invalid"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="tests.LucasTest"/>
+        </classes>
+    </test>
+</suite>

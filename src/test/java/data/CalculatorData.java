@@ -39,10 +39,8 @@ public class CalculatorData {
                 Arguments.of(-10, -2, 20));
     }
 
-    public static Stream<Arguments> divisionData() {
+    public static Stream<Arguments> divisionValidData() {
         return Stream.of(
-                Arguments.of(5, 0, "Cannot divide by zero"),
-                Arguments.of(0, 0, "Cannot divide by zero"),
                 Arguments.of(0, 5, 0),
                 Arguments.of(0, -5, 0),
                 Arguments.of(10, 2, 5),
@@ -52,9 +50,14 @@ public class CalculatorData {
                 Arguments.of(-10, -10, 1));
     }
 
-    public static Stream<Arguments> fibonacciData() {
+    public static Stream<Arguments> divisionInvalidData() {
         return Stream.of(
-                Arguments.of(-1, "n must be non-negative"),
+                Arguments.of(5, 0, ArithmeticException.class, "Cannot divide by zero"),
+                Arguments.of(0, 0, ArithmeticException.class, "Cannot divide by zero"));
+    }
+
+    public static Stream<Arguments> fibonacciValidData() {
+        return Stream.of(
                 Arguments.of(0, 0),
                 Arguments.of(1, 1),
                 Arguments.of(2, 1),
@@ -62,5 +65,10 @@ public class CalculatorData {
                 Arguments.of(5, 5),
                 Arguments.of(20, 6765),
                 Arguments.of(40, 102334155));
+    }
+
+    public static Stream<Arguments> fibonacciInvalidData() {
+        return Stream.of(
+                Arguments.of(-1, IllegalArgumentException.class, "n must be non-negative"));
     }
 }
