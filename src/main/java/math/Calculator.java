@@ -22,15 +22,32 @@ public class Calculator {
     }
 
     static public int fibonacci(int n) {
-        if (n < 0) throw new IllegalArgumentException("n must be non-negative");
-        if (n == 0) return 0;
-
         int a = 0, b = 1, c;
+
+        if (n < 0) throw new IllegalArgumentException("n must be non-negative");
+        if (n == 0) return a;
+
         for (int i = 2; i <= n; i++) {
             c = a + b;
             a = b;
             b = c;
         }
+
+        return b;
+    }
+
+    static public int lucas(int n) {
+        int a = 2, b = 1, c;
+
+        if (n < 0) throw new IllegalArgumentException("n must be non-negative");
+        if (n == 0) return a;
+
+        for (int i = 2; i <= n; i++) {
+            c = a + b;
+            a = b;
+            b = c;
+        }
+
         return b;
     }
 }
