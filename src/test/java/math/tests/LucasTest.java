@@ -1,6 +1,7 @@
-package tests;
+package math.tests;
 
 import math.Calculator;
+import math.data.LucasData;
 import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.*;
@@ -9,7 +10,7 @@ public class LucasTest {
 
     @Test(
             dataProvider = "lucasValidData",
-            dataProviderClass = data.LucasData.class,
+            dataProviderClass = LucasData.class,
             priority = 1,
             groups = {"lucas", "valid"}
     )
@@ -20,7 +21,7 @@ public class LucasTest {
 
     @Test(
             dataProvider = "lucasInvalidData",
-            dataProviderClass = data.LucasData.class,
+            dataProviderClass = LucasData.class,
             priority = 2,
             groups = {"lucas", "invalid"}
     )

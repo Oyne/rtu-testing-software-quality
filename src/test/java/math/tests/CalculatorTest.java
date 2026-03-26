@@ -1,4 +1,4 @@
-package tests;
+package math.tests;
 
 import math.Calculator;
 import org.junit.jupiter.api.MethodOrderer;
@@ -16,7 +16,7 @@ public class CalculatorTest {
     @Order(1)
     @Tag("addition")
     @ParameterizedTest(name = "{0} + {1} -> {2}")
-    @MethodSource("data.CalculatorData#additionData")
+    @MethodSource("math.data.CalculatorData#additionData")
     public void verifyAddition(int a, int b, int expected) {
         assertThat(Calculator.add(a, b)).isEqualTo(expected);
     }
@@ -24,7 +24,7 @@ public class CalculatorTest {
     @Order(2)
     @Tag("subtraction")
     @ParameterizedTest(name = "{0} - {1} -> {2}")
-    @MethodSource("data.CalculatorData#subtractionData")
+    @MethodSource("math.data.CalculatorData#subtractionData")
     public void verifySubtraction(int a, int b, int expected) {
         assertThat(Calculator.subtract(a, b)).isEqualTo(expected);
     }
@@ -32,7 +32,7 @@ public class CalculatorTest {
     @Order(3)
     @Tag("multiplication")
     @ParameterizedTest(name = "{0} * {1} -> {2}")
-    @MethodSource("data.CalculatorData#multiplicationData")
+    @MethodSource("math.data.CalculatorData#multiplicationData")
     public void verifyMultiplication(int a, int b, int expected) {
         assertThat(Calculator.multiply(a, b)).isEqualTo(expected);
     }
@@ -41,7 +41,7 @@ public class CalculatorTest {
     @Tag("division")
     @Tag("valid")
     @ParameterizedTest(name = "{0} / {1} -> {2}")
-    @MethodSource("data.CalculatorData#divisionValidData")
+    @MethodSource("math.data.CalculatorData#divisionValidData")
     public void verifyDivisionValid(int a, int b, Object expected) {
         assertThat(Calculator.divide(a, b))
                 .isEqualTo(expected);
@@ -51,7 +51,7 @@ public class CalculatorTest {
     @Tag("division")
     @Tag("invalid")
     @ParameterizedTest(name = "{0} / {1} -> throws {2}, with message: {3}")
-    @MethodSource("data.CalculatorData#divisionInvalidData")
+    @MethodSource("math.data.CalculatorData#divisionInvalidData")
     public void verifyDivisionInvalid(int a, int b, Class<? extends Throwable> exceptionClass, String message) {
         assertThatThrownBy(() -> Calculator.divide(a, b))
                 .isInstanceOf(exceptionClass)
@@ -63,7 +63,7 @@ public class CalculatorTest {
     @Tag("fibonacci")
     @Tag("valid")
     @ParameterizedTest(name = "Fibonacci({0}) -> {1}")
-    @MethodSource("data.CalculatorData#fibonacciValidData")
+    @MethodSource("math.data.CalculatorData#fibonacciValidData")
     void verifyFibonacci(int n, int expected) {
 
         assertThat(Calculator.fibonacci(n)).isEqualTo(expected);
@@ -73,7 +73,7 @@ public class CalculatorTest {
     @Tag("fibonacci")
     @Tag("invalid")
     @ParameterizedTest(name = "Fibonacci({0}) -> throws {1}, with message: {2}")
-    @MethodSource("data.CalculatorData#fibonacciInvalidData")
+    @MethodSource("math.data.CalculatorData#fibonacciInvalidData")
     void verifyFibonacciInvalid(int n, Class<? extends Throwable> exceptionClass, String message) {
 
         assertThatThrownBy(() -> Calculator.fibonacci(n))

@@ -2,7 +2,7 @@
 <suite name="LucasSuite">
     <test name="AllLucasTests">
         <classes>
-            <class name="tests.LucasTest"/>
+            <class name="math.tests.LucasTest"/>
         </classes>
     </test>
 </suite>

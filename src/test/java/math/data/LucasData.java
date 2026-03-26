@@ -1,4 +1,4 @@
-package data;
+package math.data;
 
 import org.testng.annotations.DataProvider;
 
