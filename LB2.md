@@ -1,8 +1,6 @@
 # Laboratory 2
-
 ## Xpath/CSS practical task
 ### Demo website: https://opensource-demo.orangehrmlive.com/
-
 Open elements tab in the developer tools (CTRL + SHIFT + I) or “Inspect” in the context menu.
 Using Xpath perform steps 1-7.
 1.	Go to https://opensource-demo.orangehrmlive.com/web/index.php/auth/login and locate elements Username, Password and button Login.
@@ -14,7 +12,6 @@ Using Xpath perform steps 1-7.
 7.	Go to side menu, select Leave. Locate the element that invokes the calendar of the field From Date.
 8.	Repeat steps 1 – 7 with CSS selectors.
 9.	Save found locators and selectors in the text document and submit at ORTUS.
-
 ## XPath:
 Username field : ```//input[@name="username"]```  
 Password field: ```//input[@type="password"]```  
@@ -33,8 +30,7 @@ Employee name in 5th row: ```(//div[@class="oxd-table-card"][5]//div[contains(@c
 Delete in any row: ```(//div[@class="oxd-table-card"][row-index]//div[contains(@class,"oxd-table-cell")])[6]//button[i[contains(@class, "bi-trash")]]```  
 Edit in any row: ```(//div[@class="oxd-table-card"][ row-index]//div[contains(@class,"oxd-table-cell")])[6]//button[i[contains(@class, "bi-pencil-fill")]]```  
 Leave on side menu: ```//a[contains(@href,"leave")]```  
-From Date input: ```//label[normalize-space()='From Date']/parent::div/following-sibling::div```  
-
+From Date input: ```//label[normalize-space()='From Date']/parent::div/following-sibling::div```
 ## CSS Selectors:
 Username field : ```input[name=username]```  
 Password field: ```input[name=password]```  
