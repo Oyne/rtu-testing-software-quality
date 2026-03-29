@@ -1,4 +1,4 @@
-Feature: Login Modal validation
+Feature: Login page
 
   As a user
   I want to be able to login with correct credentials

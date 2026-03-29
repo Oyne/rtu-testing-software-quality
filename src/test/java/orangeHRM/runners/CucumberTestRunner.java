@@ -2,17 +2,15 @@ package orangeHRM.runners;
 
 import org.junit.platform.suite.api.ConfigurationParameter;
 import org.junit.platform.suite.api.IncludeEngines;
-import org.junit.platform.suite.api.SelectClasspathResource;
+import org.junit.platform.suite.api.SelectPackages;
 import org.junit.platform.suite.api.Suite;
 
-import static io.cucumber.core.options.Constants.FEATURES_PROPERTY_NAME;
-import static io.cucumber.core.options.Constants.GLUE_PROPERTY_NAME;
 
 
 @Suite
 @IncludeEngines("cucumber")
-@SelectClasspathResource("cucumber/mytest.feature")
-@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "classpath:orangeHRM.steps")
-@ConfigurationParameter(key = FEATURES_PROPERTY_NAME, value = "classpath:resources.features")
+@SelectPackages("features")
+@ConfigurationParameter(key = "cucumber.glue", value = "orangeHRM") // IMPORTANT: Look here!
+@ConfigurationParameter(key = "cucumber.plugin", value = "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm")
 public class CucumberTestRunner {
 }

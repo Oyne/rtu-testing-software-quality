@@ -1,4 +1,4 @@
-Feature: Login Modal validation
+Feature: Login page
 
   As a user
   I want to understand when I make mistakes during the login process
