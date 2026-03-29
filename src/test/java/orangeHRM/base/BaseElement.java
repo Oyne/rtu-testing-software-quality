@@ -2,6 +2,7 @@ package orangeHRM.base;
 
 import org.assertj.core.api.SoftAssertions;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -9,6 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import orangeHRM.utils.CssUtils;
 
 import java.time.Duration;
+import java.util.Objects;
 
 public class BaseElement {
     protected WebDriver driver;
@@ -27,6 +29,10 @@ public class BaseElement {
         return name;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
     protected WebElement find() {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
@@ -39,6 +45,18 @@ public class BaseElement {
 
     public void click() {
         find().click();
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(d -> Objects.equals(((JavascriptExecutor) d)
+                        .executeScript("return document.readyState"), "complete"));
+    }
+
+    public void assertIsDisplayed() {
+        SoftAssertions softAssertions = new SoftAssertions();
+        boolean isDisplayed = driver.findElements(locator).isEmpty() && driver.findElement(locator).isDisplayed();
+        softAssertions.assertThat(isDisplayed)
+                .describedAs(name + " should be displayed")
+                .isFalse();
+        softAssertions.assertAll();
     }
 
     public void assertIsNotDisplayed() {
