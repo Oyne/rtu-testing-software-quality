@@ -21,21 +21,39 @@ public class LoginPageSteps {
         loginPage = new LoginPage(Hooks.driver);
     }
 
-    @Step("User enters username '{username}'")
-    @When("the user enters username {string}")
-    public void enterUsername(String username) {
-        loginPage.enterUsername(username);
+    @Step("User attempts to log in without credentials")
+    @When("the user attempts to log in without credentials")
+    public void loginWithoutCredentials() {
+        loginPage.clickLogin();
     }
 
-    @Step("User enters password '{password}'")
-    @When("the user enters password {string}")
-    public void enterPassword(String password) {
-        loginPage.enterPassword(password);
+    @Step("User attempts to log in with only a username")
+    @When("the user attempts to log in with only a username")
+    public void loginWithOnlyUsername() {
+        loginPage.enterUsername("test");
+        loginPage.clickLogin();
     }
 
-    @Step("User presses login")
-    @When("the user presses login button")
-    public void pressLogin() {
+    @Step("User attempts to log in with only a password")
+    @When("the user attempts to log in with only a password")
+    public void loginWithOnlyPassword() {
+        loginPage.enterPassword("test");
+        loginPage.clickLogin();
+    }
+
+    @Step("User attempts to log in with invalid credentials")
+    @When("the user attempts to log in with invalid credentials")
+    public void loginWithInvalidCredentials() {
+        loginPage.enterUsername("invalidUser");
+        loginPage.enterPassword("invalidPass");
+        loginPage.clickLogin();
+    }
+
+    @Step("User logs in with valid credentials")
+    @When("the user logs in with valid credentials")
+    public void loginWithValidCredentials() {
+        loginPage.enterUsername("Admin");
+        loginPage.enterPassword("admin123");
         loginPage.clickLogin();
     }
 

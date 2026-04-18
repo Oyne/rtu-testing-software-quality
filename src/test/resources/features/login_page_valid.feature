@@ -5,7 +5,5 @@ Feature: Login page
 
   Scenario: Correct credentials provided
     Given the user opens login page
-    When the user enters username "Admin"
-    And the user enters password "admin123"
-    And the user presses login button
+    When the user logs in with valid credentials
     Then dashboard page opened

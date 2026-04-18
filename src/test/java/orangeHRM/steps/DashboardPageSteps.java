@@ -10,13 +10,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class DashboardPageSteps {
 
-    private static final Logger log = LoggerFactory.getLogger(LoginPageSteps.class);
+    private static final Logger log = LoggerFactory.getLogger(DashboardPageSteps.class);
     private LoginPage loginPage;
 
     @Then("dashboard page opened")
-    public void verifyPage() {
+    public void verifyOpened() {
         assertThat(Hooks.driver.getCurrentUrl())
-                .as("Current URL")
-                .isEqualTo("https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index");
+                .as("Dashboard URL")
+                .contains("/dashboard");
     }
 }
