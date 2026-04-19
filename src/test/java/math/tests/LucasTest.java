@@ -9,10 +9,11 @@ import static org.assertj.core.api.Assertions.*;
 public class LucasTest {
 
     @Test(
-            dataProvider = "lucasValidData",
-            dataProviderClass = LucasData.class,
+            suiteName = "LucasSuite",
             priority = 1,
-            groups = {"lucas", "valid"}
+            groups = {"lucas", "valid"},
+            dataProvider = "lucasValidData",
+            dataProviderClass = LucasData.class
     )
     public void verifyLucasValid(int n, int expected) {
         assertThat(Calculator.lucas(n))
@@ -20,10 +21,11 @@ public class LucasTest {
     }
 
     @Test(
-            dataProvider = "lucasInvalidData",
-            dataProviderClass = LucasData.class,
+            suiteName = "LucasSuite",
             priority = 2,
-            groups = {"lucas", "invalid"}
+            groups = {"lucas", "invalid"},
+            dataProvider = "lucasInvalidData",
+            dataProviderClass = LucasData.class
     )
     public void verifyLucasInvalid(int n, Class<? extends Throwable> exceptionClass, String message) {
         assertThatThrownBy(() -> Calculator.lucas(n))
