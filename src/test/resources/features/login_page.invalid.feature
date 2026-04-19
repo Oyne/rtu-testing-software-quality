@@ -6,29 +6,25 @@ Feature: Login page
 
   Scenario: No credentials provided
     Given the user opens login page
-    When the user presses login button
+    When the user attempts to log in without credentials
     Then username validation message "Required" appears
     And password validation message "Required" appears
     And current page is still login page
 
   Scenario: Only username provided
     Given the user opens login page
-    When the user enters username "test"
-    And the user presses login button
+    When the user attempts to log in with only a username
     Then password validation message "Required" appears
     And current page is still login page
 
   Scenario: Only password provided
     Given the user opens login page
-    When the user enters password "test"
-    And the user presses login button
+    When the user attempts to log in with only a password
     Then username validation message "Required" appears
     And current page is still login page
 
   Scenario: Wrong credentials provided
     Given the user opens login page
-    When the user enters username "test"
-    And the user enters password "test"
-    And the user presses login button
+    When the user attempts to log in with invalid credentials
     Then "Invalid credentials" error is visible
     And current page is still login page

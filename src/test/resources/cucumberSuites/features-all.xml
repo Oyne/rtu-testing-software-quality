@@ -1,0 +1,11 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<suite name="Cucumber Test Suite" parallel="false">
+
+    <test name="Run All Features">
+        <classes>
+            <class name="orangeHRM.runners.CucumberRunner"/>
+        </classes>
+    </test>
+
+</suite>
