@@ -34,6 +34,7 @@ public class LoginPage extends BasePage {
     @Step("Enter username: '{username}'")
     public void enterUsername(String username) {
         inputField(usernameInput, username);
+        log.info("Entering username: {}", username);
     }
 
     @Step("Enter password: '{password}'")

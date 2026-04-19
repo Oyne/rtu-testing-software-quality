@@ -21,27 +21,23 @@ public class LoginPageSteps {
         loginPage = new LoginPage(Hooks.driver);
     }
 
-    @Step("User attempts to log in without credentials")
     @When("the user attempts to log in without credentials")
     public void loginWithoutCredentials() {
         loginPage.clickLogin();
     }
 
-    @Step("User attempts to log in with only a username")
     @When("the user attempts to log in with only a username")
     public void loginWithOnlyUsername() {
         loginPage.enterUsername("test");
         loginPage.clickLogin();
     }
 
-    @Step("User attempts to log in with only a password")
     @When("the user attempts to log in with only a password")
     public void loginWithOnlyPassword() {
         loginPage.enterPassword("test");
         loginPage.clickLogin();
     }
 
-    @Step("User attempts to log in with invalid credentials")
     @When("the user attempts to log in with invalid credentials")
     public void loginWithInvalidCredentials() {
         loginPage.enterUsername("invalidUser");
@@ -49,7 +45,6 @@ public class LoginPageSteps {
         loginPage.clickLogin();
     }
 
-    @Step("User logs in with valid credentials")
     @When("the user logs in with valid credentials")
     public void loginWithValidCredentials() {
         loginPage.enterUsername("Admin");
