@@ -13,7 +13,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class LoginPageSteps {
 
-    private static final Logger log = LoggerFactory.getLogger(LoginPageSteps.class);
     private LoginPage loginPage;
 
     @Given("the user opens login page")
@@ -70,8 +69,7 @@ public class LoginPageSteps {
     }
 
     @Then("{string} error is visible")
-    public void verifyError(String error)
-    {
+    public void verifyError(String error) {
         loginPage.assertErrorIsVisible(error);
     }
 }

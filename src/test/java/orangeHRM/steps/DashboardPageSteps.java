@@ -9,10 +9,6 @@ import org.slf4j.LoggerFactory;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class DashboardPageSteps {
-
-    private static final Logger log = LoggerFactory.getLogger(DashboardPageSteps.class);
-    private LoginPage loginPage;
-
     @Then("dashboard page opened")
     public void verifyOpened() {
         assertThat(Hooks.driver.getCurrentUrl())
