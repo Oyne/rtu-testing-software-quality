@@ -1,5 +1,6 @@
 package orangeHRM.pages.components;
 
+import orangeHRM.pages.Modal;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 

@@ -6,10 +6,9 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import orangeHRM.hooks.Hooks;
-import orangeHRM.pages.AdminPage;
-import orangeHRM.pages.LoginPage;
-import orangeHRM.pages.SideBar;
+import orangeHRM.pages.*;
 import orangeHRM.pages.components.UserTableRow;
+import org.openqa.selenium.NoSuchElementException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AdminPageSteps {
     private AdminPage adminPage;
     private List<UserTableRow> records;
-    private List<UserTableRow> initRecords;
+    private String deletedUsername;
     private String savedEmployeeName;
     private static final Logger log = LoggerFactory.getLogger(AdminPageSteps.class);
 
@@ -33,7 +32,6 @@ public class AdminPageSteps {
         SideBar sideBar = new SideBar(Hooks.driver);
         sideBar.clickOnAdminTab();
         adminPage = sideBar.clickOnAdminTab();
-        initRecords = adminPage.getAllUserRows();
     }
 
     @When("the user searches users by part of username {string}")
@@ -227,5 +225,44 @@ public class AdminPageSteps {
         assertThat(rowCount)
                 .as("Table rows vs Records found count")
                 .isEqualTo(systemCount);
+    }
+
+    @Given("the users open add user page")
+    public void theUsersOpenAddUserPage() {
+        adminPage.clickAddButton();
+    }
+
+    @Then("admin page opened")
+    public void verifyOpened() {
+        assertThat(Hooks.driver.getCurrentUrl())
+                .as("Admin Tab URL")
+                .contains("/admin/viewSystemUsers");
+    }
+
+    @When("the user attempts to delete first record of non admin user")
+    public void theUserAttemptsToDeleteFirstRecordOfNonAdminUser() {
+        records = adminPage.getAllUserRows();
+        UserTableRow targetRow = records.stream()
+                .filter(record -> !record.getUserRole().equalsIgnoreCase("Admin"))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("Could not find a non-admin user to delete."));
+
+        deletedUsername = targetRow.getUsername();
+
+        targetRow.clickDelete();
+        Modal modal = new Modal(Hooks.driver);
+        modal.clickOnButtonByName("Yes, Delete");
+    }
+
+    @Then("deleted user should not be displayed")
+    public void deletedUserShouldNotBeDisplayed() {
+        records = adminPage.getAllUserRows();
+
+        assertThat(records)
+                .as("Check that username '" + deletedUsername + "' was removed")
+                .extracting(UserTableRow::getUsername)
+                .doesNotContain(deletedUsername);
+
+        log.info("Verified: User {} is no longer in the table.", deletedUsername);
     }
 }
