@@ -5,8 +5,7 @@ Feature: Admin User Management Functionality
   So that I can ensure that only authorized users have system access
 
   Background:
-    Given the user is logged in and opened the "Admin" tab
-    And the user navigates to the "Add User" page
+    Given the user logged in and opened admin tab
 
   @PositivePath
   Scenario: Successfully add a new system user

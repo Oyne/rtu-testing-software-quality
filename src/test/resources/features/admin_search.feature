@@ -30,7 +30,7 @@
 
     @HappyPath
     Scenario: Search user by full employee name
-      When the user captures the employee name of the first record in the table
+      Given the user captures the employee name of the first record in the table
       And the user searches by the captured employee name
       Then the table should only show record for that captured name
 
@@ -50,4 +50,10 @@
         | Admin    | Admin    | Enabled  |
         |          | ESS      | Disabled |
 
-
+    @HappyPath
+    Scenario: Reset search filters to view all records
+      When the user attempts to search by "ESS" user role
+      Then users with only "ESS" user role are visible
+      When the user resets the search filters
+      Then the search fields should be cleared
+      And all system user records should be displayed

@@ -24,7 +24,7 @@ public class AdminPage extends BasePage {
         super(driver, "Admin page");;
         usernameInput = new BaseElement(driver, "Username input field on " + this.getName(), By.xpath("//label[normalize-space()='Username']/parent::div/following-sibling::*//input"));
         searchButton = new BaseElement(driver, "Search button on " + this.getName(), By.xpath("//button[normalize-space()='Search']"));
-        resetButton = new BaseElement(driver, "Reset button on " + this.getName(), By.xpath("//button[normalize-space()='Search']"));
+        resetButton = new BaseElement(driver, "Reset button on " + this.getName(), By.xpath("//button[normalize-space()='Reset']"));
         recordsNumber = new BaseElement(driver, "Records number on " + this.getName(), By.xpath("//span[contains(normalize-space(), 'Record')]"));
         userRoleDropdown = new BaseElement(driver, "User role dropdown on " + this.getName(), By.xpath("//label[normalize-space()='User Role']/parent::div/following-sibling::div"));
         employeeNameInput = new BaseElement(driver, "Employee name input field on " + this.getName(), By.xpath("//label[normalize-space()='Employee Name']/parent::div/following-sibling::*//input"));
@@ -92,4 +92,21 @@ public class AdminPage extends BasePage {
         BaseElement statusOption = new BaseElement(driver, status + " option of " + userRoleDropdown.getName(), By.xpath("//*[@role='option' and normalize-space()='%s']".formatted(status)));
         statusOption.click();
     }
+
+    public String  getUsernameInputValue(){
+        return usernameInput.getText();
+    }
+
+    public String  getUserRoleDropwdownValue(){
+        return userRoleDropdown.getText();
+    }
+
+    public String  getEmployeeNameInputValue(){
+        return employeeNameInput.getText();
+    }
+
+    public String  getStatusDropdownValue(){
+        return statusDropdown.getText();
+    }
+
 }

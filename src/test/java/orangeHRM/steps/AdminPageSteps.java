@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AdminPageSteps {
     private AdminPage adminPage;
     private List<UserTableRow> records;
+    private List<UserTableRow> initRecords;
     private String savedEmployeeName;
     private static final Logger log = LoggerFactory.getLogger(AdminPageSteps.class);
 
@@ -32,6 +33,7 @@ public class AdminPageSteps {
         SideBar sideBar = new SideBar(Hooks.driver);
         sideBar.clickOnAdminTab();
         adminPage = sideBar.clickOnAdminTab();
+        initRecords = adminPage.getAllUserRows();
     }
 
     @When("the user searches users by part of username {string}")
@@ -161,7 +163,8 @@ public class AdminPageSteps {
             adminPage.selectStatus(status);
         }
 
-        adminPage.clickSearch();    }
+        adminPage.clickSearch();
+    }
 
     @Then("the results should match the filtered criteria of {string}, {string} and {string}")
     public void theResultsShouldMatchTheFilteredCriteriaOfAnd(String expectedUsername, String expectedRole, String expectedStatus) {
@@ -190,5 +193,39 @@ public class AdminPageSteps {
                         }
                     });
         }
+    }
+
+    @When("the user resets the search filters")
+    public void theUserResetsTheSearchFilters() {
+        adminPage.clickReset();
+    }
+
+    @Then("the search fields should be cleared")
+    public void theSearchFieldsShouldBeCleared() {
+        assertThat(adminPage.getUsernameInputValue())
+                .as("Username field")
+                .isEmpty();
+
+        assertThat(adminPage.getUserRoleDropwdownValue())
+                .as("User Role dropdown")
+                .isEqualTo("-- Select --"); // Or whatever your default placeholder is
+
+        assertThat(adminPage.getEmployeeNameInputValue())
+                .as("Employee Name field")
+                .isEmpty();
+
+        assertThat(adminPage.getStatusDropdownValue())
+                .as("Status dropdown")
+                .isEqualTo("-- Select --");
+    }
+
+    @And("all system user records should be displayed")
+    public void allSystemUserRecordsShouldBeDisplayed() {
+        int rowCount = adminPage.getAllUserRows().size();
+        int systemCount = adminPage.getNumberOfRecords();
+
+        assertThat(rowCount)
+                .as("Table rows vs Records found count")
+                .isEqualTo(systemCount);
     }
 }
