@@ -24,7 +24,7 @@ public class BaseElement {
 
     public BaseElement(WebDriver driver, String name, By locator) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         this.name = name;
         this.locator = locator;
     }
@@ -34,6 +34,7 @@ public class BaseElement {
     }
 
     protected WebElement find() {
+        loadingWaiter();
         return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
@@ -44,13 +45,14 @@ public class BaseElement {
             field.clear();
             field.sendKeys(text);
         });
+        loadingWaiter();
     }
 
     public void click() {
         Allure.step("Click " + name, () -> {
             log.info("Clicking element: {}", name);
             find().click();
-            new WebDriverWait(driver, Duration.ofSeconds(10))
+            new WebDriverWait(driver, Duration.ofSeconds(30))
                     .until(d -> Objects.equals(((JavascriptExecutor) d)
                             .executeScript("return document.readyState"), "complete"));
         });

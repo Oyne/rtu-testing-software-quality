@@ -77,7 +77,7 @@ public class AdminPage extends BasePage {
 
     public void selectEmployeeName(String employeeName){
         employeeNameInput.typeText(employeeName);
-        BaseElement employeeOption = new BaseElement(driver, employeeName + " option of " + employeeNameInput.getName(), By.xpath("//*[@role='option' and contains(normalize-space(),'%s')]".formatted(employeeName)));
+        BaseElement employeeOption = new BaseElement(driver, employeeName + " option of " + employeeNameInput.getName(), By.xpath("//div[@role='option'][1]"));
         employeeOption.click();
     }
 

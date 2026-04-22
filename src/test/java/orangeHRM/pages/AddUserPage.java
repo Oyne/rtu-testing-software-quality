@@ -17,6 +17,8 @@ public class AddUserPage extends BasePage {
     protected BaseElement userRoleDropdown;
     protected BaseElement employeeNameInput;
     protected BaseElement statusDropdown;
+    protected BaseElement passwordInput;
+    protected BaseElement confirmPasswordInput;
 
     public AddUserPage(WebDriver driver) {
         super(driver, "Add User page");;
@@ -26,6 +28,9 @@ public class AddUserPage extends BasePage {
         userRoleDropdown = new BaseElement(driver, "User role dropdown on " + this.getName(), By.xpath("//label[normalize-space()='User Role']/parent::div/following-sibling::div"));
         employeeNameInput = new BaseElement(driver, "Employee name input field on " + this.getName(), By.xpath("//label[normalize-space()='Employee Name']/parent::div/following-sibling::*//input"));
         statusDropdown = new BaseElement(driver, "Status dropdown on " + this.getName(), By.xpath("//label[normalize-space()='Status']/parent::div/following-sibling::div"));
+        passwordInput = new BaseElement(driver, "Password input field on " + this.getName(), By.xpath("//label[normalize-space()='Password']/parent::div/following-sibling::*//input"));
+        confirmPasswordInput = new BaseElement(driver, "Confirm Password input field on " + this.getName(), By.xpath("//label[normalize-space()='Confirm Password']/parent::div/following-sibling::*//input"));
+
     }
 
     public void enterUsername(String username){
@@ -47,20 +52,10 @@ public class AddUserPage extends BasePage {
         roleOption.click();
     }
 
-    public void enterEmployeeName(String employeeName){
-        employeeNameInput.typeText(employeeName);
-    }
-
     public void selectEmployeeName(String employeeName){
         employeeNameInput.typeText(employeeName);
-        BaseElement employeeOption = new BaseElement(driver, employeeName + " option of " + employeeNameInput.getName(), By.xpath("//*[@role='option' and contains(normalize-space(),'%s')]".formatted(employeeName)));
+        BaseElement employeeOption = new BaseElement(driver, employeeName + " option of " + employeeNameInput.getName(), By.xpath("//div[@role='option'][1]"));
         employeeOption.click();
-    }
-
-    public void assertValidationUnderEmployeeNameInputIsVisible(){
-        BaseElement validation = new BaseElement(driver, "Validation message under " + employeeNameInput.getName(), By.xpath("//label[normalize-space()='Employee Name']/parent::div/following-sibling::span"));
-        validation.assertTextIs("Invalid");
-        validation.assertIsDisplayed();
     }
 
     public void selectStatus(String status)
@@ -69,4 +64,12 @@ public class AddUserPage extends BasePage {
         BaseElement statusOption = new BaseElement(driver, status + " option of " + userRoleDropdown.getName(), By.xpath("//*[@role='option' and normalize-space()='%s']".formatted(status)));
         statusOption.click();
     }
+    public void enterPassword(String password){
+        passwordInput.typeText(password);
+    }
+
+    public void enterConfirmPassword(String password){
+        confirmPasswordInput.typeText(password);
+    }
+
 }

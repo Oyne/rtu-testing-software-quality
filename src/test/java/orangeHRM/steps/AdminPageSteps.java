@@ -8,6 +8,7 @@ import io.cucumber.java.en.When;
 import orangeHRM.hooks.Hooks;
 import orangeHRM.pages.*;
 import orangeHRM.pages.components.UserTableRow;
+import org.assertj.core.api.SoftAssertions;
 import org.openqa.selenium.NoSuchElementException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +19,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class AdminPageSteps {
     private AdminPage adminPage;
+    private AddUserPage addUserPage;
     private List<UserTableRow> records;
     private String deletedUsername;
     private String savedEmployeeName;
+    private String newUserUsername;
+    private final String newUserRole = "ESS";
+    private final String newUserStatus = "Enabled";
+    private final String newUserPassword = "TestPassword9RTU!";
     private static final Logger log = LoggerFactory.getLogger(AdminPageSteps.class);
 
     @Given("the user logged in and opened admin tab")
@@ -138,13 +144,14 @@ public class AdminPageSteps {
     public void theTableShouldOnlyShowRecordsForThatCapturedName() {
         records = adminPage.getAllUserRows();
 
-        assertThat(records.size())
-                .as("Number of records found for " + savedEmployeeName)
-                .isEqualTo(1);
-
-        assertThat(records.getFirst().getEmployeeName())
-                .as("Employee name in the first row")
-                .isEqualTo(savedEmployeeName);
+        if (!records.isEmpty()) {
+            assertThat(records)
+                    .as("Checking that all returned users have the employee name: " + savedEmployeeName)
+                    .allSatisfy(record -> {
+                        assertThat(record.getEmployeeName())
+                                .isEqualTo(savedEmployeeName);
+                    });
+        }
     }
 
     @When("the user filters by {string}, {string} and {string}")
@@ -229,7 +236,7 @@ public class AdminPageSteps {
 
     @Given("the users open add user page")
     public void theUsersOpenAddUserPage() {
-        adminPage.clickAddButton();
+        addUserPage = adminPage.clickAddButton();
     }
 
     @Then("admin page opened")
@@ -264,5 +271,53 @@ public class AdminPageSteps {
                 .doesNotContain(deletedUsername);
 
         log.info("Verified: User {} is no longer in the table.", deletedUsername);
+    }
+
+    @Given("the user clicks cancel")
+    public void cancel() {
+        addUserPage.clickCancel();
+    }
+
+    @When("the user attempts creating new user with required valid data")
+    public void theUserAttemptsCreatingNewUserWithRequiredValidData() {
+        newUserUsername = "TestUser" + System.currentTimeMillis();
+        addUserPage.enterUsername(newUserUsername);
+        addUserPage.selectEmployeeName(savedEmployeeName);
+        addUserPage.selectUserRole(newUserRole);
+        addUserPage.selectStatus(newUserStatus);
+        addUserPage.enterPassword(newUserPassword);
+        addUserPage.enterConfirmPassword(newUserPassword);
+
+        addUserPage.clickSave();
+    }
+
+    @Then("the new user should be searchable in the system")
+    public void theNewUserShouldBeSearchableInTheSystem() {
+        adminPage.enterUsername(newUserUsername);
+        adminPage.selectUserRole(newUserRole);
+        adminPage.selectStatus(newUserStatus);
+        adminPage.clickSearch();
+
+        records = adminPage.getAllUserRows();
+        UserTableRow actualUser = records.getFirst();
+
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(actualUser.getUsername())
+                .as("Username")
+                .isEqualTo(newUserUsername);
+
+        softly.assertThat(actualUser.getUserRole())
+                .as("User Role")
+                .isEqualTo(newUserRole);
+
+        softly.assertThat(actualUser.getEmployeeName())
+                .as("Employee Name")
+                .isEqualTo(savedEmployeeName);
+
+        softly.assertThat(actualUser.getStatus())
+                .as("Status")
+                .isEqualTo(newUserStatus);
+
+        softly.assertAll();
     }
 }

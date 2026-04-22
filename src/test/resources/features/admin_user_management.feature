@@ -8,7 +8,7 @@ Feature: Admin User Management Functionality
     Given the user logged in and opened admin tab
 
   @HappyPath
-  Scenario: Return to admin page
+  Scenario: Return to admin page from add user page
     Given the users open add user page
     When the user clicks cancel
     Then admin page opened
@@ -20,7 +20,8 @@ Feature: Admin User Management Functionality
 
   @HappyPath
   Scenario: Successfully add a new system user
-    Given the users open add user page
+    Given the user captures the employee name of the first record in the table
+    And the users open add user page
     When the user attempts creating new user with required valid data
     Then the new user should be searchable in the system
 
