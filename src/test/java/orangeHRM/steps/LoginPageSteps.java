@@ -1,13 +1,10 @@
 package orangeHRM.steps;
 
 import io.cucumber.java.en.Then;
-import io.qameta.allure.Step;
 import orangeHRM.hooks.Hooks;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import orangeHRM.pages.LoginPage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

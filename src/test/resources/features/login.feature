@@ -1,14 +1,8 @@
 Feature: Login Functionality
 
   As a user
-
-  === Happy Path ===
   I want to be able to login with correct credentials
-  So that I can access my dashboard and understand any login errors if I make a mistake
-
-  === Sad Path ===
-  I want to understand when I make mistakes during the login process
-  So that I know what needs to be corrected to log in successfully
+  So that I can access my dashboard
 
   Background:
     Given the user opens login page

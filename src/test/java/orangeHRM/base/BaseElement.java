@@ -54,6 +54,16 @@ public class BaseElement {
                     .until(d -> Objects.equals(((JavascriptExecutor) d)
                             .executeScript("return document.readyState"), "complete"));
         });
+
+        loadingWaiter();
+    }
+
+    private void loadingWaiter() {
+        try {
+            new WebDriverWait(driver, Duration.ofSeconds(2))
+                    .until(ExpectedConditions.invisibilityOfElementLocated(By.className("oxd-form-loader")));
+        } catch (Exception ignored) {
+        }
     }
 
     public void assertIsDisplayed() {
@@ -119,5 +129,10 @@ public class BaseElement {
                     .isEqualTo(expectedText);
             softAssertions.assertAll();
         });
+    }
+
+    public String getText()
+    {
+        return find().getText();
     }
 }
