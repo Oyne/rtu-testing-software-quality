@@ -1,17 +1,13 @@
 package orangeHRM.pages;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import orangeHRM.base.BaseElement;
 import orangeHRM.base.BasePage;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.Color;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class LoginPage extends BasePage {
-    private static final Logger log = LoggerFactory.getLogger(LoginPage.class);
     private final String fieldXPath = "//input[@name=\"%s\"]";
     private final String username = "username";
     private final String password = "password";
@@ -27,18 +23,14 @@ public class LoginPage extends BasePage {
         loginButton = new BaseElement(driver, "Login button on " + this.getName(), By.xpath("//button[@type=\"submit\"]"));
     }
 
-    public void inputField(BaseElement field, String value) {
-        field.typeText(value);
-    }
-
     @Step("Enter username: '{username}'")
     public void enterUsername(String username) {
-        inputField(usernameInput, username);
+        usernameInput.typeText(username);
     }
 
     @Step("Enter password: '{password}'")
     public void enterPassword(String password) {
-        inputField(passwordInput, password);
+        passwordInput.typeText(password);
     }
 
     public void assertFieldValidationIsVisible(BaseElement field, String fieldName, String message) {
