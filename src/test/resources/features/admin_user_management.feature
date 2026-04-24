@@ -14,41 +14,33 @@ Feature: Admin User Management Functionality
     Then admin page opened
 
   @HappyPath
-  Scenario: Successfully delete an existing system user
-    When the user attempts to delete first record of non admin user
-    Then deleted user should not be displayed
-
-  @HappyPath
   Scenario: Successfully add a new system user
     Given the user captures the employee name of the first record in the table
     And the users open add user page
     When the user attempts creating new user with required valid data
     Then the new user should be searchable in the system
 
-  @SadPath
-  Scenario Outline: Verify mandatory fields for adding a user
-    Given the users open add user page
-    When the user leaves the "<Field>" field empty
-    And clicks the "Save" button
-    Then a "Required" error message should appear for the "<Field>" field
+  @HappyPath
+  Scenario: Successfully delete an existing system user
+    When the user attempts to delete first record of non admin user
+    Then deleted user should not be displayed
 
-    Examples:
-      | Field         |
-      | User Role     |
-      | Employee Name |
-      | Username      |
-      | Password      |
+  @SadPath
+  Scenario: Verify mandatory fields for adding a user
+    Given the users open add user page
+    When the user attempts to save new user without required data
+    Then validation messages appear after each field of new user tab
 
   @SadPath
   Scenario Outline: Verify password validation
-    Given the user navigates to the "Add User" screen
+    Given the users open add user page
     When the user enters a password "<Password>"
-    Then the system should display a validation error message "<ErrorMessage>"
+    Then the system should display a validation error message under password field "<ValidationMessage>"
 
     Examples:
-      | Password  | ErrorMessage                                | Description         |
-      | Ab1!      | Should have at least 8 characters           | Too short (4 chars) |
-      | abcdefg1! | Should have at least 1 upper case character | Missing Uppercase   |
-      | ABCDEFG1! | Should have at least 1 lower case character | Missing Lowercase   |
-      | Abcdefg!! | Should have at least 1 number               | Missing Number      |
-      | Abcdefg12 | Should have at least 1 special character    | Missing Symbol      |
+      | Password  | ValidationMessage                                      |
+      | a         | Should have at least 7 characters                      |
+      | qwertyu   | Your password must contain minimum 1 number            |
+      | 1234567   | Your password must contain minimum 1 lower-case letter |
+      | qwertyu1  |                                                        |
+      | 1234567a  |                                                        |

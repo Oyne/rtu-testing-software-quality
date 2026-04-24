@@ -24,7 +24,7 @@ public class BaseElement {
 
     public BaseElement(WebDriver driver, String name, By locator) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         this.name = name;
         this.locator = locator;
     }
@@ -42,7 +42,8 @@ public class BaseElement {
         Allure.step("Type '" + text + "' into " + name, () -> {
             log.info("Typing '{}' into field: {}", text, name);
             var field = find();
-            field.clear();
+            field.sendKeys(org.openqa.selenium.Keys.CONTROL + "a");
+            field.sendKeys(org.openqa.selenium.Keys.BACK_SPACE);
             field.sendKeys(text);
         });
         loadingWaiter();
@@ -133,8 +134,7 @@ public class BaseElement {
         });
     }
 
-    public String getText()
-    {
+    public String getText() {
         return find().getText();
     }
 }

@@ -20,6 +20,7 @@ public class AdminPage extends BasePage {
     protected BaseElement employeeNameInput;
     protected BaseElement statusDropdown;
     protected BaseElement addButton;
+
     public AdminPage(WebDriver driver) {
         super(driver, "Admin page");;
         usernameInput = new BaseElement(driver, "Username input field on " + this.getName(), By.xpath("//label[normalize-space()='Username']/parent::div/following-sibling::*//input"));
@@ -98,7 +99,7 @@ public class AdminPage extends BasePage {
         return usernameInput.getText();
     }
 
-    public String  getUserRoleDropwdownValue(){
+    public String  getUserRoleDropdownValue(){
         return userRoleDropdown.getText();
     }
 

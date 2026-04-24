@@ -69,4 +69,11 @@ public class LoginPageSteps {
     public void verifyError(String error) {
         loginPage.assertErrorIsVisible(error);
     }
+
+    @Then("dashboard page opened")
+    public void verifyOpened() {
+        assertThat(Hooks.driver.getCurrentUrl())
+                .as("Dashboard URL")
+                .contains("/dashboard");
+    }
 }

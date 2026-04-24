@@ -211,7 +211,7 @@ public class AdminPageSteps {
                 .as("Username field")
                 .isEmpty();
 
-        assertThat(adminPage.getUserRoleDropwdownValue())
+        assertThat(adminPage.getUserRoleDropdownValue())
                 .as("User Role dropdown")
                 .isEqualTo("-- Select --"); // Or whatever your default placeholder is
 
@@ -280,7 +280,7 @@ public class AdminPageSteps {
 
     @When("the user attempts creating new user with required valid data")
     public void theUserAttemptsCreatingNewUserWithRequiredValidData() {
-        newUserUsername = "TestUser" + System.currentTimeMillis();
+        newUserUsername = "User" + System.currentTimeMillis();
         addUserPage.enterUsername(newUserUsername);
         addUserPage.selectEmployeeName(savedEmployeeName);
         addUserPage.selectUserRole(newUserRole);
@@ -295,6 +295,7 @@ public class AdminPageSteps {
     public void theNewUserShouldBeSearchableInTheSystem() {
         adminPage.enterUsername(newUserUsername);
         adminPage.selectUserRole(newUserRole);
+        adminPage.selectEmployeeName(savedEmployeeName);
         adminPage.selectStatus(newUserStatus);
         adminPage.clickSearch();
 
@@ -319,5 +320,30 @@ public class AdminPageSteps {
                 .isEqualTo(newUserStatus);
 
         softly.assertAll();
+    }
+
+    @When("the user attempts to save new user without required data")
+    public void theUserAttemptsToSaveNewUser() {
+        addUserPage.clickSave();
+    }
+
+    @Then("validation messages appear after each field of new user tab")
+    public void validationMessagesAppearAfterEachField() {
+        addUserPage.assertUsernameValidation("Required");
+        addUserPage.assertEmployeeNameValidation("Required");
+        addUserPage.assertUserRoleValidation("Required");
+        addUserPage.assertStatusValidation("Required");
+        addUserPage.assertPasswordValidation("Required");
+        addUserPage.assertConfirmPasswordValidation("Passwords do not match");
+    }
+
+    @When("the user enters a password {string}")
+    public void theUserEntersAPassword(String password) {
+        addUserPage.enterPassword(password);
+    }
+
+    @Then("the system should display a validation error message under password field {string}")
+    public void theSystemShouldDisplayAValidationErrorMessageUnderPasswordField(String validationMessage) {
+        addUserPage.assertPasswordValidation(validationMessage);
     }
 }

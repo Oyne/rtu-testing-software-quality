@@ -21,7 +21,7 @@ public class AddUserPage extends BasePage {
     protected BaseElement confirmPasswordInput;
 
     public AddUserPage(WebDriver driver) {
-        super(driver, "Add User page");;
+        super(driver, "Add User page");
         usernameInput = new BaseElement(driver, "Username input field on " + this.getName(), By.xpath("//label[normalize-space()='Username']/parent::div/following-sibling::*//input"));
         saveButton = new BaseElement(driver, "Save button on " + this.getName(), By.xpath("//button[normalize-space()='Save']"));
         cancelButton = new BaseElement(driver, "Cancel button on " + this.getName(), By.xpath("//button[normalize-space()='Cancel']"));
@@ -30,7 +30,6 @@ public class AddUserPage extends BasePage {
         statusDropdown = new BaseElement(driver, "Status dropdown on " + this.getName(), By.xpath("//label[normalize-space()='Status']/parent::div/following-sibling::div"));
         passwordInput = new BaseElement(driver, "Password input field on " + this.getName(), By.xpath("//label[normalize-space()='Password']/parent::div/following-sibling::*//input"));
         confirmPasswordInput = new BaseElement(driver, "Confirm Password input field on " + this.getName(), By.xpath("//label[normalize-space()='Confirm Password']/parent::div/following-sibling::*//input"));
-
     }
 
     public void enterUsername(String username){
@@ -72,4 +71,40 @@ public class AddUserPage extends BasePage {
         confirmPasswordInput.typeText(password);
     }
 
+    private void assertFieldValidation(String labelName, String expectedMessage) {
+        String xpath = "//label[normalize-space()='%s']/parent::div/following-sibling::span".formatted(labelName);
+        BaseElement validation = new BaseElement(driver, "Validation message under " + labelName, By.xpath(xpath));
+
+        if (expectedMessage != null && !expectedMessage.isBlank()) {
+            validation.assertIsDisplayed();
+            validation.assertTextIs(expectedMessage);
+        }
+        else {
+            validation.assertIsNotDisplayed();
+        }
+    }
+
+    public void assertUsernameValidation(String message) {
+        assertFieldValidation("Username", message);
+    }
+
+    public void assertEmployeeNameValidation(String message) {
+        assertFieldValidation("Employee Name", message);
+    }
+
+    public void assertUserRoleValidation(String message) {
+        assertFieldValidation("User Role", message);
+    }
+
+    public void assertStatusValidation(String message) {
+        assertFieldValidation("Status", message);
+    }
+
+    public void assertPasswordValidation(String message) {
+        assertFieldValidation("Password", message);
+    }
+
+    public void assertConfirmPasswordValidation(String message) {
+        assertFieldValidation("Confirm Password", message);
+    }
 }
