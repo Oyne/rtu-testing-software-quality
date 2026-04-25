@@ -1,12 +1,12 @@
 package petstore.tests;
 
 import io.qameta.allure.Description;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import java.net.http.HttpResponse;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.post;
@@ -19,8 +19,7 @@ public class PetStoreTests {
 
     private void ensurePetExists() {
         if (createdPetID <= 0) {
-            createdPetID = given()
-                    .contentType(ContentType.JSON)
+            createdPetID = given().contentType(ContentType.JSON)
                     .body("{\"name\": \"TestPet\", \"status\": \"available\"}")
                     .when()
                     .post("/pet")
@@ -32,18 +31,14 @@ public class PetStoreTests {
     }
 
     private void ensureUserExists() {
-        String userBody = "{" +
-                "\"username\": \"" + username + "\"," +
-                "\"firstName\": \"Test\"," +
-                "\"lastName\": \"User\"," +
-                "\"email\": \"test@test.com\"," +
-                "\"password\": \"pass123\"," +
-                "\"phone\": \"1234567890\"," +
-                "\"userStatus\": 1" +
-                "}";
+        String userBody = "{" + "\"username\": \"" + username + "\"," + "\"firstName\": \"Test\"," + "\"lastName\": \"User\"," + "\"email\": \"test@test.com\"," + "\"password\": \"pass123\"," + "\"phone\": \"1234567890\"," + "\"userStatus\": 1" + "}";
 
-        post("/user");
+        given()
+                .contentType(ContentType.JSON)
+                .body(userBody)
+                .post("/user");
     }
+
 
     @BeforeAll
     public static void setup() {
@@ -53,18 +48,12 @@ public class PetStoreTests {
     @Test
     @Description("Validates that a pet can be successfully added and stores the ID for future tests.")
     public void testAddPet_Positive() {
-        String body = "{" +
-                "\"name\": \"TestPet\"," +
-                "\"status\": \"available\"" +
-                "}";
+        String body = "{" + "\"name\": \"TestPet\"," + "\"status\": \"available\"" + "}";
 
         createdPetID = given()
                 .contentType(ContentType.JSON)
-                .body(body)
-                .when()
-                .post("/pet")
-                .then()
-                .statusCode(200)
+                .body(body).when().post("/pet")
+                .then().statusCode(200)
                 .contentType(ContentType.JSON)
                 .body("name", equalTo("TestPet"))
                 .extract()
@@ -75,10 +64,8 @@ public class PetStoreTests {
     @Description("Validates the data structure and specific values of a pet record.")
     public void testGetPetById_Positive() {
         ensurePetExists();
-        given()
-                .pathParam("petId", createdPetID)
-                .when()
-                .get("/pet/{petId}")
+        given().pathParam("petId", createdPetID)
+                .when().get("/pet/{petId}")
                 .then()
                 .statusCode(200)
                 .body("id", is(notNullValue()))
@@ -102,11 +89,7 @@ public class PetStoreTests {
     @Description("Validates that an existing pet's status can be updated via PUT.")
     public void testUpdatePet_Positive() {
         ensurePetExists();
-        String updatedBody = "{" +
-                "\"id\": " + createdPetID + "," +
-                "\"name\": \"Rex\"," +
-                "\"status\": \"sold\"" +
-                "}";
+        String updatedBody = "{" + "\"id\": " + createdPetID + "," + "\"name\": \"Rex\"," + "\"status\": \"sold\"" + "}";
 
         given()
                 .contentType(ContentType.JSON)
@@ -122,22 +105,13 @@ public class PetStoreTests {
     @Description("Validates that a user can place an order for a pet.")
     public void testPlaceOrder_Positive() {
         ensurePetExists();
-        String orderBody = "{" +
-                "\"id\": 5," +
-                "\"petId\": " + createdPetID + "," +
-                "\"quantity\": 1," +
-                "\"shipDate\": \"2023-10-27T10:00:00.000Z\"," +
-                "\"status\": \"placed\"," +
-                "\"complete\": true" +
-                "}";
+        String orderBody = "{" + "\"id\": 5," + "\"petId\": " + createdPetID + "," + "\"quantity\": 1," + "\"shipDate\": \"2023-10-27T10:00:00.000Z\"," + "\"status\": \"placed\"," + "\"complete\": true" + "}";
 
         given()
                 .contentType(ContentType.JSON)
-                .body(orderBody)
-                .when()
+                .body(orderBody).when()
                 .post("/store/order")
-                .then()
-                .statusCode(200)
+                .then().statusCode(200)
                 .body("status", equalTo("placed"))
                 .body("complete", equalTo(true));
     }
@@ -148,8 +122,7 @@ public class PetStoreTests {
         given()
                 .when()
                 .get("/store/inventory")
-                .then()
-                .statusCode(200)
+                .then().statusCode(200)
                 .contentType(ContentType.JSON)
                 .body("$", hasKey("available"));
     }
@@ -168,20 +141,11 @@ public class PetStoreTests {
     @Test
     @Description("Validates that a user can be created via POST.")
     public void testCreateUser_Positive() {
-        String userBody = "{" +
-                "\"username\": \"" + username + "\"," +
-                "\"firstName\": \"Test\"," +
-                "\"lastName\": \"User\"," +
-                "\"email\": \"test@test.com\"," +
-                "\"password\": \"pass123\"," +
-                "\"phone\": \"1234567890\"," +
-                "\"userStatus\": 1" +
-                "}";
+        String userBody = "{" + "\"username\": \"" + username + "\"," + "\"firstName\": \"Test\"," + "\"lastName\": \"User\"," + "\"email\": \"test@test.com\"," + "\"password\": \"pass123\"," + "\"phone\": \"1234567890\"," + "\"userStatus\": 1" + "}";
 
         given()
                 .contentType(ContentType.JSON)
-                .body(userBody)
-                .when()
+                .body(userBody).when()
                 .post("/user")
                 .then()
                 .statusCode(200)
@@ -212,7 +176,7 @@ public class PetStoreTests {
                 .when()
                 .get("/user/login")
                 .then()
-                .statusCode(200) // The demo API often returns 200
+                .statusCode(200)
                 .body("message", containsString("logged in user session"));
     }
 }
