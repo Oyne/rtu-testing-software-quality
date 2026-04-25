@@ -10,5 +10,6 @@
 #### To run JUnit unit tests use [CalculatorTest](src/test/java/math/tests/CalculatorTest.java)
 #### To run TestNG unit tests use [LucasTest](src/test/java/math/tests/LucasTest.java) or [lucal-all.xml](src/test/resources/testNGSuites/lucas-all.xml)
 #### To run Cucumber tests use [CucumberRunner](src/test/java/orangeHRM/runners/CucumberRunner.java) or [features-all.xml](src/test/resources/cucumberSuites/features-all.xml)
+#### To run API tests use [PetstoreTests](src/test/java/petstore/tests/PetStoreTests.java)
 #### To generate Allure report use  ```allure serve target/allure-results```
 #### To clean Allure results use ```Remove-Item -Recurse -Force target/allure-results```
