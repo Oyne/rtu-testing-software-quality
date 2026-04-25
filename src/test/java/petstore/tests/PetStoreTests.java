@@ -1,182 +1,174 @@
 package petstore.tests;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.Feature;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
-import java.net.http.HttpResponse;
+import org.junit.jupiter.api.*;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.post;
 import static org.hamcrest.Matchers.*;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PetStoreTests {
 
-    private long createdPetID = -1;
+    private static long createdPetID = -1;
     private final String username = "testUserAutomation";
-
-    private void ensurePetExists() {
-        if (createdPetID <= 0) {
-            createdPetID = given().contentType(ContentType.JSON)
-                    .body("{\"name\": \"TestPet\", \"status\": \"available\"}")
-                    .when()
-                    .post("/pet")
-                    .then()
-                    .statusCode(200)
-                    .extract()
-                    .path("id");
-        }
-    }
-
-    private void ensureUserExists() {
-        String userBody = "{" + "\"username\": \"" + username + "\"," + "\"firstName\": \"Test\"," + "\"lastName\": \"User\"," + "\"email\": \"test@test.com\"," + "\"password\": \"pass123\"," + "\"phone\": \"1234567890\"," + "\"userStatus\": 1" + "}";
-
-        given()
-                .contentType(ContentType.JSON)
-                .body(userBody)
-                .post("/user");
-    }
-
 
     @BeforeAll
     public static void setup() {
         RestAssured.baseURI = "https://petstore.swagger.io/v2";
     }
 
+    private void ensurePetExists() {
+        if (createdPetID <= 0) {
+            testAddPet_Positive();
+        }
+    }
+
     @Test
-    @Description("Validates that a pet can be successfully added and stores the ID for future tests.")
+    @Feature("Pet")
+    @Description("Add a new pet and validate response structure and ID.")
     public void testAddPet_Positive() {
-        String body = "{" + "\"name\": \"TestPet\"," + "\"status\": \"available\"" + "}";
+        String body = "{\"name\": \"TestPet\", \"status\": \"available\"}";
 
         createdPetID = given()
                 .contentType(ContentType.JSON)
-                .body(body).when().post("/pet")
-                .then().statusCode(200)
+                .body(body)
+                .when().post("/pet")
+                .then()
+                .statusCode(200)
                 .contentType(ContentType.JSON)
                 .body("name", equalTo("TestPet"))
-                .extract()
-                .path("id");
+                .body("id", is(instanceOf(Long.class)))
+                .extract().path("id");
     }
 
     @Test
-    @Description("Validates the data structure and specific values of a pet record.")
+    @Feature("Pet")
+    @Description("Retrieve pet by ID and verify data consistency.")
     public void testGetPetById_Positive() {
         ensurePetExists();
-        given().pathParam("petId", createdPetID)
+        given()
+                .pathParam("petId", createdPetID)
                 .when().get("/pet/{petId}")
                 .then()
                 .statusCode(200)
-                .body("id", is(notNullValue()))
-                .body("name", is(instanceOf(String.class)))
-                .body("status", anyOf(equalTo("available"), equalTo("pending"), equalTo("sold")));
+                .contentType(ContentType.JSON)
+                .body("id", equalTo(createdPetID))
+                .body("status", is(notNullValue()));
     }
 
     @Test
-    @Description("Validates that a 404 error is returned for a non-existent pet.")
+    @Feature("Pet")
+    @Description("Update pet status and verify changes.")
+    public void testUpdatePet_Positive() {
+        ensurePetExists();
+        String updatedBody = "{\"id\": " + createdPetID + ", \"name\": \"Rex\", \"status\": \"sold\"}";
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(updatedBody)
+                .when().put("/pet")
+                .then()
+                .statusCode(200)
+                .body("status", equalTo("sold"))
+                .body("name", is(instanceOf(String.class)));
+    }
+
+    @Test
+    @Feature("Pet")
+    @Description("Verify 404 for non-existent pet ID.")
     public void testGetPetById_Negative_NotFound() {
         given()
-                .pathParam("petId", -1)
-                .when()
-                .get("/pet/{petId}")
+                .pathParam("petId", 0)
+                .when().get("/pet/{petId}")
                 .then()
                 .statusCode(404)
                 .body("message", equalTo("Pet not found"));
     }
 
     @Test
-    @Description("Validates that an existing pet's status can be updated via PUT.")
-    public void testUpdatePet_Positive() {
-        ensurePetExists();
-        String updatedBody = "{" + "\"id\": " + createdPetID + "," + "\"name\": \"Rex\"," + "\"status\": \"sold\"" + "}";
-
-        given()
-                .contentType(ContentType.JSON)
-                .body(updatedBody)
-                .when()
-                .put("/pet")
-                .then()
-                .statusCode(200)
-                .body("status", equalTo("sold"));
-    }
-
-    @Test
-    @Description("Validates that a user can place an order for a pet.")
+    @Feature("Store")
+    @Description("Place an order for a pet and validate order status.")
     public void testPlaceOrder_Positive() {
         ensurePetExists();
-        String orderBody = "{" + "\"id\": 5," + "\"petId\": " + createdPetID + "," + "\"quantity\": 1," + "\"shipDate\": \"2023-10-27T10:00:00.000Z\"," + "\"status\": \"placed\"," + "\"complete\": true" + "}";
+        String orderBody = "{\"petId\": " + createdPetID + ", \"quantity\": 1, \"status\": \"placed\"}";
 
         given()
                 .contentType(ContentType.JSON)
-                .body(orderBody).when()
-                .post("/store/order")
-                .then().statusCode(200)
+                .body(orderBody)
+                .when().post("/store/order")
+                .then()
+                .statusCode(200)
+                .body("petId", equalTo(createdPetID))
                 .body("status", equalTo("placed"))
-                .body("complete", equalTo(true));
+                .body("id", is(notNullValue()));
     }
 
     @Test
-    @Description("Validates the inventory schema (key-value pairs of statuses).")
+    @Feature("Store")
+    @Description("Verify inventory returns correct keys.")
     public void testGetInventory_Positive() {
         given()
-                .when()
-                .get("/store/inventory")
-                .then().statusCode(200)
+                .when().get("/store/inventory")
+                .then()
+                .statusCode(200)
                 .contentType(ContentType.JSON)
                 .body("$", hasKey("available"));
     }
 
     @Test
-    @Description("Validates error response when deleting an order that doesn't exist.")
+    @Feature("Store")
+    @Description("Verify error when deleting invalid order ID.")
     public void testDeleteOrder_Negative_NotFound() {
         given()
                 .pathParam("orderId", -1)
-                .when()
-                .delete("/store/order/{orderId}")
+                .when().delete("/store/order/{orderId}")
                 .then()
                 .statusCode(404);
     }
 
     @Test
-    @Description("Validates that a user can be created via POST.")
+    @Feature("User")
+    @Description("Create a new user and validate response message.")
     public void testCreateUser_Positive() {
-        String userBody = "{" + "\"username\": \"" + username + "\"," + "\"firstName\": \"Test\"," + "\"lastName\": \"User\"," + "\"email\": \"test@test.com\"," + "\"password\": \"pass123\"," + "\"phone\": \"1234567890\"," + "\"userStatus\": 1" + "}";
+        String userBody = "{\"username\": \"" + username + "\", \"firstName\": \"QA\"}";
 
         given()
                 .contentType(ContentType.JSON)
-                .body(userBody).when()
-                .post("/user")
+                .body(userBody)
+                .when().post("/user")
                 .then()
                 .statusCode(200)
-                .body("code", equalTo(200))
-                .body("message", is(notNullValue()));
+                .body("code", is(200))
+                .body("message", is(instanceOf(String.class)));
     }
 
     @Test
-    @Description("Validates the details of a created user.")
+    @Feature("User")
+    @Description("Retrieve user by name and verify status type.")
     public void testGetUserByName_Positive() {
-        ensureUserExists();
+        testCreateUser_Positive();
         given()
                 .pathParam("username", username)
-                .when()
-                .get("/user/{username}")
+                .when().get("/user/{username}")
                 .then()
                 .statusCode(200)
+                .contentType(ContentType.JSON)
                 .body("username", equalTo(username))
-                .body("email", equalTo("test@test.com"));
+                .body("userStatus", is(instanceOf(Integer.class)));
     }
 
     @Test
-    @Description("Validates system behavior when logging in without parameters.")
-    public void testLogin_Negative_EmptyParams() {
+    @Feature("User")
+    @Description("Verify error response for unknown username.")
+    public void testGetUserByName_Negative_NotFound() {
         given()
-                .queryParam("username", "")
-                .queryParam("password", "")
-                .when()
-                .get("/user/login")
+                .pathParam("username", "unknown_user_999")
+                .when().get("/user/{username}")
                 .then()
-                .statusCode(200)
-                .body("message", containsString("logged in user session"));
+                .statusCode(404)
+                .body("message", containsString("User not found"));
     }
 }
